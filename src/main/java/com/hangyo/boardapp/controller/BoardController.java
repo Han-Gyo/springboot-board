@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
@@ -79,5 +81,14 @@ public class BoardController {
     public String write(Board board) {
         boardService.save(board);
         return "redirect:/boards";
+    }
+
+    // 게시글 검색 API
+    // 예) /boards/search?writer=작성자1&keyword=제목
+    @GetMapping("/boards/search")
+    @ResponseBody
+    public List<Board> search(@RequestParam String writer,
+                              @RequestParam String keyword) {
+        return boardService.search(writer, keyword);
     }
 }

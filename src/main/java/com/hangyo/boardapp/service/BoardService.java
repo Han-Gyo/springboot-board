@@ -1,5 +1,6 @@
 package com.hangyo.boardapp.service;
 
+import com.hangyo.boardapp.Mapper.BoardMapper;
 import com.hangyo.boardapp.entity.Board;
 import com.hangyo.boardapp.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardMapper boardMapper;
 
     // 저장
     public Board save(Board board) {
@@ -20,7 +22,7 @@ public class BoardService {
 
     // 전체 조회
     public List<Board> findAll() {
-        return boardRepository.findAll();
+        return boardMapper.findAll();
     }
 
     // 단일 조회
@@ -44,5 +46,10 @@ public class BoardService {
         board.setWriter(requestBoard.getWriter());
 
         return boardRepository.save(board);
+    }
+
+    // 작성자와 제목 키워드로 게시글 검색
+    public List<Board> search(String writer, String Keyword) {
+        return boardRepository.search(writer, Keyword);
     }
 }
