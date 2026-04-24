@@ -4,6 +4,8 @@ package com.hangyo.boardapp.controller;
 import com.hangyo.boardapp.entity.Board;
 import com.hangyo.boardapp.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +33,15 @@ public class BoardController {
         return "저장 완료" ;
     }
     
-    // 전체 조회
+    // 게시글 목록 조회 + 페이징
     @GetMapping("/boards")
-    public String list(Model model) {
+    public String list(@RequestParam(defaultValue = "0") int page, Model model) {
 
-        model.addAttribute("boards", boardService.findAll());
+        Page<Board> boardPage = boardService.findAllPaging(PageRequest.of(page,5));
+
+        model.addAttribute("boards", boardPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", boardPage.getTotalPages());
 
         return "list";
     }
@@ -85,10 +91,27 @@ public class BoardController {
 
     // 게시글 검색 API
     // 예) /boards/search?writer=작성자1&keyword=제목
-    @GetMapping("/boards/search")
+    /* @GetMapping("/boards/search")
     @ResponseBody
     public List<Board> search(@RequestParam String writer,
                               @RequestParam String keyword) {
         return boardService.search(writer, keyword);
+    } */
+
+    // 게시글 검색 + 페이징
+    @GetMapping("/boards/search")
+    public String search(@RequestParam String writer,
+                         @RequestParam String keyword,
+                         @RequestParam(defaultValue = "0") int page,
+                         Model model) {
+        Page<Board> boardPage = boardService.search(writer, keyword, PageRequest.of(page, 5));
+
+        model.addAttribute("boards", boardPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", boardPage.getTotalPages());
+        model.addAttribute("writer", writer);
+        model.addAttribute("keyword", keyword);
+
+        return "list";
     }
 }

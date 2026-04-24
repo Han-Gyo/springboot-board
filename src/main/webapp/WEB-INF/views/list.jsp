@@ -26,5 +26,25 @@
 
 </table>
 
+<div>
+    <c:forEach begin="0" end="${totalPages - 1}" var="i">
+
+        <c:choose>
+            <c:when test="${not empty writer and not empty keyword}">
+                <a href="/boards/search?writer=${writer}&keyword=${keyword}&page=${i}">
+                        ${i + 1}
+                </a>
+            </c:when>
+
+            <c:otherwise>
+                <a href="/boards?page=${i}">
+                        ${i + 1}
+                </a>
+            </c:otherwise>
+        </c:choose>
+
+    </c:forEach>
+</div>
+
 </body>
 </html>

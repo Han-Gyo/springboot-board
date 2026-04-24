@@ -4,6 +4,8 @@ import com.hangyo.boardapp.Mapper.BoardMapper;
 import com.hangyo.boardapp.entity.Board;
 import com.hangyo.boardapp.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,8 +50,18 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    // 작성자와 제목 키워드로 게시글 검색
-    public List<Board> search(String writer, String Keyword) {
-        return boardRepository.search(writer, Keyword);
+    /* 작성자와 제목 키워드로 게시글 검색
+    public List<Board> search(String writer, String keyword) {
+        return boardRepository.search(writer, keyword);
+    } */
+
+    // 게시글 목록 페이징 조회
+    public Page<Board> findAllPaging(Pageable pageable) {
+        return boardRepository.findAll(pageable);
+    }
+
+    // 작성자와 제목 키워드로 게시글 검색 + 페이징
+    public Page<Board> search(String writer, String keyword, Pageable pageable) {
+        return boardRepository.search(writer, keyword, pageable);
     }
 }
